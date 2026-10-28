@@ -1,0 +1,641 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sistemas Agroforestales – Chaco Seco</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<style>
+/* ── TOKENS ── */
+:root {
+  color-scheme: light;
+  --bg:       #f5f3ee;
+  --surface:  #ffffff;
+  --surface2: #f0ede6;
+  --border:   #ddd9d0;
+  --fg:       #1e1c18;
+  --muted:    #6b6659;
+  --bo:       #2d6a2f;
+  --bo-l:     #d4edda;
+  --bo-l2:    #eaf6ec;
+  --ssc:      #c4762a;
+  --ssc-l:    #fde8c8;
+  --ssc-l2:   #fff5e8;
+  --mbgi:     #2a6a9e;
+  --mbgi-l:   #cce3f5;
+  --mbgi-l2:  #e8f4fd;
+  --radius:   10px;
+  --shadow:   0 2px 12px rgba(0,0,0,.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #181612; --surface: #242018; --surface2: #2e2a22;
+    --border: #3a352a; --fg: #edeae3; --muted: #9b9285;
+    --bo-l: #1a3a1c; --bo-l2: #142e16;
+    --ssc-l: #3a2208; --ssc-l2: #2e1a06;
+    --mbgi-l: #0c2840; --mbgi-l2: #081e30;
+    --shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #181612; --surface: #242018; --surface2: #2e2a22;
+  --border: #3a352a; --fg: #edeae3; --muted: #9b9285;
+  --bo-l: #1a3a1c; --bo-l2: #142e16;
+  --ssc-l: #3a2208; --ssc-l2: #2e1a06;
+  --mbgi-l: #0c2840; --mbgi-l2: #081e30;
+  --shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  padding-left:  max(16px, env(safe-area-inset-left,  0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 52px;
+}
+
+/* ── HERO ── */
+.hero { max-width: 900px; margin: 0 auto 32px; text-align: center; }
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.hero h1 {
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 700; line-height: 1.2;
+  text-wrap: balance; color: var(--fg); margin-bottom: 10px;
+}
+.hero p { font-size: .9rem; color: var(--muted); max-width: 540px; margin: 0 auto; line-height: 1.6; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 6px; max-width: 900px;
+  margin: 0 auto 26px; flex-wrap: wrap;
+}
+.tab-btn {
+  flex: 1; min-width: 130px; padding: 11px 18px;
+  border: 2px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace; font-size: .8rem; font-weight: 600;
+  cursor: pointer; transition: all .18s; text-align: center;
+}
+.tab-btn:hover { border-color: var(--muted); color: var(--fg); }
+.tab-btn.active[data-sys="BO"]   { background: var(--bo-l);   border-color: var(--bo);   color: var(--bo); }
+.tab-btn.active[data-sys="SSC"]  { background: var(--ssc-l);  border-color: var(--ssc);  color: var(--ssc); }
+.tab-btn.active[data-sys="MBGI"] { background: var(--mbgi-l); border-color: var(--mbgi); color: var(--mbgi); }
+.tab-btn.active[data-sys="CMP"]  { background: var(--surface2); border-color: var(--fg); color: var(--fg); }
+
+/* ── PANEL ── */
+.panel { display: none; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; }
+
+/* ── STAT ROW ── */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 14px 12px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.1); }
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.bo-card::before   { background: var(--bo); }
+.ssc-card::before  { background: var(--ssc); }
+.mbgi-card::before { background: var(--mbgi); }
+.stat-label { font-family:'IBM Plex Mono',monospace; font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.stat-value { font-size: 1.65rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat-unit  { font-size: .75rem; color: var(--muted); margin-top: 4px; }
+.bo-val   { color: var(--bo); }
+.ssc-val  { color: var(--ssc); }
+.mbgi-val { color: var(--mbgi); }
+
+/* ── CHART GRID ── */
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media (max-width: 580px) { .chart-grid { grid-template-columns: 1fr; } }
+.chart-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 14px 14px;
+  box-shadow: var(--shadow); position: relative;
+}
+.chart-box h3 {
+  font-family:'IBM Plex Mono',monospace; font-size:.68rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;
+}
+
+/* ── ANIMATED BAR (horizontal) ── */
+.hbar-wrap { display: flex; flex-direction: column; gap: 7px; }
+.hbar-row { display: flex; align-items: center; gap: 8px; }
+.hbar-num {
+  font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700;
+  color: var(--fg); width: 14px; text-align: right; flex-shrink: 0;
+}
+.hbar-track { flex: 1; height: 18px; background: var(--surface2); border-radius: 4px; overflow: hidden; position: relative; cursor: default; }
+.hbar-fill { height: 100%; border-radius: 4px; width: 0; transition: width .7s cubic-bezier(.4,0,.2,1); position: relative; }
+.hbar-fill::after {
+  content: attr(data-val);
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-family:'IBM Plex Mono',monospace; font-size:.65rem; font-weight:600;
+  color: #fff; white-space: nowrap; pointer-events: none;
+}
+.hbar-label { font-size: .72rem; color: var(--muted); min-width: 70px; max-width: 90px; line-height: 1.2; }
+
+/* Tooltip */
+.hbar-track:hover::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; top: -32px; transform: translateX(-50%);
+  background: var(--fg); color: var(--bg);
+  font-family:'IBM Plex Mono',monospace; font-size:.65rem;
+  padding: 3px 7px; border-radius: 4px; white-space: nowrap; z-index: 10; pointer-events: none;
+}
+
+/* ── GAUGE (donut) ── */
+.gauge-wrap { display: flex; align-items: center; justify-content: space-around; padding: 8px 0; gap: 12px; flex-wrap: wrap; }
+.gauge-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.gauge-svg { overflow: visible; }
+.gauge-val { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.gauge-sub { font-family:'IBM Plex Mono',monospace; font-size:.62rem; color: var(--muted); text-align: center; }
+
+/* ── LEGEND ── */
+.num-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 8px; margin-top: 10px; }
+.num-legend-item { display: flex; align-items: flex-start; gap: 5px; font-size:.66rem; color:var(--muted); font-family:'IBM Plex Mono',monospace; line-height:1.35; }
+.num-badge { display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:3px; color:#fff; font-weight:700; font-size:.58rem; flex-shrink:0; margin-top:1px; }
+
+/* ── NOTE BANNER ── */
+.note-banner {
+  border-radius: var(--radius); padding: 12px 16px; margin-bottom: 24px;
+  font-size: .84rem; line-height: 1.55; border-left: 4px solid;
+  box-shadow: var(--shadow);
+}
+.note-banner.bo   { background: var(--bo-l2);   border-color: var(--bo);   color: var(--fg); }
+.note-banner.ssc  { background: var(--ssc-l2);  border-color: var(--ssc);  color: var(--fg); }
+.note-banner.mbgi { background: var(--mbgi-l2); border-color: var(--mbgi); color: var(--fg); }
+
+/* ── TABLE ── */
+.species-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 14px; margin-bottom: 24px;
+  overflow-x: auto; box-shadow: var(--shadow);
+}
+.species-box h3 {
+  font-family:'IBM Plex Mono',monospace; font-size:.68rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;
+}
+table { width:100%; border-collapse:collapse; font-size:.84rem; min-width:0; }
+th { text-align:left; padding:6px 10px; font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--border); }
+td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+td em { font-style:italic; color:var(--muted); font-size:.82rem; }
+tr:last-child td { border-bottom:none; }
+.num { font-variant-numeric:tabular-nums; text-align:right; }
+.num-cell { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
+.mini-bar { flex:0 0 50px; height:7px; background:var(--border); border-radius:4px; overflow:hidden; }
+.mini-fill { height:100%; border-radius:4px; }
+tr:hover td { background: var(--surface2); }
+
+/* ── COMPARACIÓN ── */
+.cmp-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 16px; margin-bottom:20px; box-shadow:var(--shadow); }
+.cmp-section h3 { font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+.legend-row { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:16px; }
+.legend-item { display:flex; align-items:center; gap:7px; font-size:.82rem; }
+.legend-dot { width:12px; height:12px; border-radius:2px; flex-shrink:0; }
+
+.cmp-metric { margin-bottom: 20px; }
+.cmp-metric-label { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--muted); margin-bottom:6px; }
+.cmp-bars { display:flex; flex-direction:column; gap:5px; }
+.cmp-row { display:flex; align-items:center; gap:8px; }
+.cmp-sys  { font-family:'IBM Plex Mono',monospace; font-size:.68rem; font-weight:600; width:38px; }
+.cmp-track { flex:1; height:22px; background:var(--surface2); border-radius:4px; overflow:hidden; position:relative; cursor:default; }
+.cmp-fill { height:100%; border-radius:4px; width:0; transition:width .8s cubic-bezier(.4,0,.2,1); display:flex; align-items:center; justify-content:flex-end; padding-right:6px; }
+.cmp-fill span { font-family:'IBM Plex Mono',monospace; font-size:.65rem; font-weight:700; color:#fff; white-space:nowrap; }
+.cmp-track:hover::after {
+  content:attr(data-tip); position:absolute; left:50%; top:-32px; transform:translateX(-50%);
+  background:var(--fg); color:var(--bg);
+  font-family:'IBM Plex Mono',monospace; font-size:.65rem;
+  padding:3px 7px; border-radius:4px; white-space:nowrap; z-index:10; pointer-events:none;
+}
+
+/* ── RADAR (SVG) ── */
+.radar-wrap { display:flex; justify-content:center; padding: 8px 0; }
+
+/* ── FOOTER ── */
+.footer { max-width:900px; margin:36px auto 0; font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); text-align:center; line-height:1.7; }
+
+/* ── TABLE TOGGLE ── */
+.tbl-toggle { font-family:'IBM Plex Mono',monospace; font-size:.68rem; cursor:pointer; color:var(--muted); text-decoration:underline; border:none; background:none; margin-top:10px; padding:0; }
+.tbl-toggle:hover { color:var(--fg); }
+</style>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║                  HERO                        ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="hero">
+  <div class="eyebrow">Resultados — Tesis de Maestría · Mcal. Estigarribia, Boquerón</div>
+  <h1>Sistemas de Producción Agroganadera<br>en el Chaco Seco</h1>
+  <p>Análisis comparativo de estructura forestal, biomasa y carbono en tres sistemas de uso del suelo evaluados mediante inventario forestal y tecnologías geoespaciales.</p>
+</div>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║                  TABS                        ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="tabs" role="tablist">
+  <button class="tab-btn active" data-sys="CMP"  onclick="show('CMP',this)" >📊 Comparación</button>
+  <button class="tab-btn"        data-sys="BO"   onclick="show('BO',this)"  >🌳 Bosque (BO)</button>
+  <button class="tab-btn"        data-sys="SSC"  onclick="show('SSC',this)" >🐄 SSC</button>
+  <button class="tab-btn"        data-sys="MBGI" onclick="show('MBGI',this)">🌿 MBGI</button>
+</div>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║              PANEL BO                        ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="panel" id="panel-BO">
+  <div class="stat-row">
+    <div class="stat-card bo-card"><div class="stat-label">Abundancia</div><div class="stat-value bo-val">148</div><div class="stat-unit">árboles / ha</div></div>
+    <div class="stat-card bo-card"><div class="stat-label">Área basal</div><div class="stat-value bo-val">11,38</div><div class="stat-unit">m² / ha</div></div>
+    <div class="stat-card bo-card"><div class="stat-label">Volumen total</div><div class="stat-value bo-val">55,23</div><div class="stat-unit">m³ / ha</div></div>
+    <div class="stat-card bo-card"><div class="stat-label">Biomasa</div><div class="stat-value bo-val">53,34</div><div class="stat-unit">ton / ha</div></div>
+    <div class="stat-card bo-card"><div class="stat-label">C almacenado</div><div class="stat-value bo-val">26,67</div><div class="stat-unit">ton C / ha</div></div>
+    <div class="stat-card bo-card"><div class="stat-label">N° especies</div><div class="stat-value bo-val">14</div><div class="stat-unit">spp. arbóreas</div></div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Abundancia por especie (árboles/ha)</h3>
+      <div class="hbar-wrap" id="bo-abu-bars"></div>
+      <div class="num-legend" id="bo-abu-leg"></div>
+    </div>
+    <div class="chart-box">
+      <h3>Biomasa por especie (ton/ha)</h3>
+      <div class="hbar-wrap" id="bo-bio-bars"></div>
+      <div class="num-legend" id="bo-bio-leg"></div>
+    </div>
+  </div>
+
+  <div class="note-banner bo">
+    <strong>Regeneración natural activa:</strong> 1.850 brinzales/ha · 1.100 latizales/ha — la mayor densidad de regeneración de los tres sistemas. Especie dominante: <em>Mimozyganthus carinatus</em> (850 brinzales/ha).
+  </div>
+
+  <div class="species-box">
+    <h3>Composición florística — 14 especies, 11 familias</h3>
+    <table id="bo-table">
+      <thead><tr><th>Especie</th><th>Común</th><th class="num">Árb/ha</th><th class="num">Biomasa t/ha</th><th class="num">C t/ha</th></tr></thead>
+      <tbody>
+        <tr><td><em>Salta triflora</em></td><td>Guaimi pire</td><td class="num">44</td><td><div class="num-cell">3,42<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:13%"></div></div></div></td><td class="num">1,71</td></tr>
+        <tr><td><em>Calycophyllum multiflorum</em></td><td>Palo blanco</td><td class="num">24</td><td><div class="num-cell">3,25<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:12%"></div></div></div></td><td class="num">1,62</td></tr>
+        <tr><td><em>Aspidosperma quebracho-blanco</em></td><td>Quebracho blanco</td><td class="num">16</td><td><div class="num-cell">7,08<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:26%"></div></div></div></td><td class="num">3,54</td></tr>
+        <tr><td><em>Ceiba chodatii</em></td><td>Samu'u</td><td class="num">15</td><td><div class="num-cell">27,20<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:100%"></div></div></div></td><td class="num">13,60</td></tr>
+        <tr><td><em>Tabebuia nodosa</em></td><td>Labón</td><td class="num">12</td><td><div class="num-cell">1,45<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:5%"></div></div></div></td><td class="num">0,73</td></tr>
+        <tr><td><em>Ziziphus mistol</em></td><td>Mistol</td><td class="num">11</td><td><div class="num-cell">2,70<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:10%"></div></div></div></td><td class="num">1,35</td></tr>
+        <tr><td><em>Schinopsis lorentzii</em></td><td>Coronillo</td><td class="num">8</td><td><div class="num-cell">2,12<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:8%"></div></div></div></td><td class="num">1,06</td></tr>
+        <tr><td><em>Schinus fasciculatus</em></td><td>Molle negro</td><td class="num">8</td><td><div class="num-cell">2,75<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:10%"></div></div></div></td><td class="num">1,37</td></tr>
+        <tr><td><em>Cereus forbesii</em></td><td>Tuna</td><td class="num">5</td><td><div class="num-cell">2,88<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:11%"></div></div></div></td><td class="num">1,44</td></tr>
+        <tr><td>Otras 5 especies</td><td>—</td><td class="num">5</td><td><div class="num-cell">0,49<div class="mini-bar"><div class="mini-fill" style="background:var(--bo);width:2%"></div></div></div></td><td class="num">0,25</td></tr>
+        <tr style="font-weight:700"><td>Total</td><td></td><td class="num">148</td><td class="num">53,34</td><td class="num">26,67</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║              PANEL SSC                       ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="panel" id="panel-SSC">
+  <div class="stat-row">
+    <div class="stat-card ssc-card"><div class="stat-label">Abundancia</div><div class="stat-value ssc-val">38</div><div class="stat-unit">árboles / ha</div></div>
+    <div class="stat-card ssc-card"><div class="stat-label">Área basal</div><div class="stat-value ssc-val">2,87</div><div class="stat-unit">m² / ha</div></div>
+    <div class="stat-card ssc-card"><div class="stat-label">Volumen total</div><div class="stat-value ssc-val">27,92</div><div class="stat-unit">m³ / ha</div></div>
+    <div class="stat-card ssc-card"><div class="stat-label">Biomasa</div><div class="stat-value ssc-val">25,01</div><div class="stat-unit">ton / ha</div></div>
+    <div class="stat-card ssc-card"><div class="stat-label">C almacenado</div><div class="stat-value ssc-val">12,50</div><div class="stat-unit">ton C / ha</div></div>
+    <div class="stat-card ssc-card"><div class="stat-label">Copa (drone)</div><div class="stat-value ssc-val">35,17</div><div class="stat-unit">%</div></div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Árboles por especie (árboles/ha)</h3>
+      <div class="hbar-wrap" id="ssc-abu-bars"></div>
+    </div>
+    <div class="chart-box">
+      <h3>Cobertura de copa — terreno vs. drone</h3>
+      <div class="gauge-wrap" id="ssc-gauges"></div>
+    </div>
+  </div>
+
+  <div class="note-banner ssc">
+    <strong>Sin regeneración natural:</strong> Ausencia total de brinzales y latizales en las 6 parcelas. Posible causa: alta competencia con el pasto, exceso de luz directa o presión de pastoreo.
+  </div>
+
+  <div class="species-box">
+    <h3>Solo 2 especies arbóreas — baja diversidad florística</h3>
+    <table>
+      <thead><tr><th>Especie</th><th>Común</th><th class="num">Árb/ha</th><th class="num">Área basal m²/ha</th><th class="num">Biomasa t/ha</th><th class="num">C t/ha</th></tr></thead>
+      <tbody>
+        <tr><td><em>Schinopsis lorentzii</em></td><td>Coronillo</td><td class="num">25</td><td class="num">1,75</td><td class="num">14,35</td><td class="num">7,17</td></tr>
+        <tr><td><em>Aspidosperma quebracho-blanco</em></td><td>Quebracho blanco</td><td class="num">13</td><td class="num">1,13</td><td class="num">10,66</td><td class="num">5,33</td></tr>
+        <tr style="font-weight:700"><td>Total</td><td></td><td class="num">38</td><td class="num">2,87</td><td class="num">25,01</td><td class="num">12,50</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║             PANEL MBGI                       ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="panel" id="panel-MBGI">
+  <div class="stat-row">
+    <div class="stat-card mbgi-card"><div class="stat-label">Abundancia</div><div class="stat-value mbgi-val">92</div><div class="stat-unit">árboles / ha</div></div>
+    <div class="stat-card mbgi-card"><div class="stat-label">Área basal</div><div class="stat-value mbgi-val">5,72</div><div class="stat-unit">m² / ha</div></div>
+    <div class="stat-card mbgi-card"><div class="stat-label">Volumen total</div><div class="stat-value mbgi-val">48,92</div><div class="stat-unit">m³ / ha</div></div>
+    <div class="stat-card mbgi-card"><div class="stat-label">Biomasa</div><div class="stat-value mbgi-val">26,22</div><div class="stat-unit">ton / ha</div></div>
+    <div class="stat-card mbgi-card"><div class="stat-label">C almacenado</div><div class="stat-value mbgi-val">13,11</div><div class="stat-unit">ton C / ha</div></div>
+    <div class="stat-card mbgi-card"><div class="stat-label">Copa (drone)</div><div class="stat-value mbgi-val">72,50</div><div class="stat-unit">%</div></div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <h3>Árboles por especie (árboles/ha)</h3>
+      <div class="hbar-wrap" id="mbgi-abu-bars"></div>
+      <div class="num-legend" id="mbgi-abu-leg"></div>
+    </div>
+    <div class="chart-box">
+      <h3>Cobertura de copa — terreno vs. drone</h3>
+      <div class="gauge-wrap" id="mbgi-gauges"></div>
+    </div>
+  </div>
+
+  <div class="note-banner mbgi">
+    <strong>Regeneración variable:</strong> Presente en 4 de 6 parcelas (P2, P4, P5 con brinzales; P6 equilibrado). Ausente en P1 y P3 — posiblemente por mayor competencia con pasto o presión de pastoreo.
+  </div>
+
+  <div class="species-box">
+    <h3>3 especies identificadas + 54 árboles próximos/ha</h3>
+    <table>
+      <thead><tr><th>Especie</th><th>Común</th><th class="num">Árb/ha</th><th class="num">Área basal m²/ha</th><th class="num">Vol. m³/ha</th></tr></thead>
+      <tbody>
+        <tr><td><em>Aspidosperma quebracho-blanco</em></td><td>Quebracho blanco</td><td class="num">13</td><td class="num">3,84</td><td class="num">37,18</td></tr>
+        <tr><td><em>Neltuma nigra</em></td><td>Algarrobo negro</td><td class="num">21</td><td class="num">1,17</td><td class="num">5,71</td></tr>
+        <tr><td><em>Schinopsis lorentzii</em></td><td>Coronillo</td><td class="num">25</td><td class="num">0,71</td><td class="num">6,03</td></tr>
+        <tr><td>Árboles próximos (sin id.)</td><td>—</td><td class="num">54</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr style="font-weight:700"><td>Total</td><td></td><td class="num">92</td><td class="num">5,72</td><td class="num">48,92</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║            PANEL COMPARACIÓN                 ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="panel active" id="panel-CMP">
+  <div class="legend-row" style="max-width:900px;margin:0 auto 20px;">
+    <span class="legend-item"><span class="legend-dot" style="background:var(--bo)"></span>Bosque Nativo (BO)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--ssc)"></span>Sistema Silvopastoril Conv. (SSC)</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--mbgi)"></span>Manejo Bosque c/Ganadería Integrada (MBGI)</span>
+  </div>
+
+  <div class="cmp-section">
+    <h3>Árboles por hectárea</h3>
+    <div class="cmp-bars" id="cmp-abu"></div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="cmp-section" style="margin-bottom:0">
+      <h3>Biomasa total (ton/ha)</h3>
+      <div class="cmp-bars" id="cmp-bio"></div>
+    </div>
+    <div class="cmp-section" style="margin-bottom:0">
+      <h3>Carbono almacenado (ton C/ha)</h3>
+      <div class="cmp-bars" id="cmp-carbon"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;" class="chart-grid">
+    <div class="cmp-section" style="margin-bottom:0">
+      <h3>Área basal (m²/ha)</h3>
+      <div class="cmp-bars" id="cmp-ab"></div>
+    </div>
+    <div class="cmp-section" style="margin-bottom:0">
+      <h3>Cobertura de copa con drone (%)</h3>
+      <div class="cmp-bars" id="cmp-copa"></div>
+      <p style="font-size:.68rem;color:var(--muted);margin-top:8px;font-family:'IBM Plex Mono',monospace;">* BO no cuenta con medición de drone</p>
+    </div>
+  </div>
+
+  <!-- Radar chart -->
+  <div class="cmp-section" style="margin-top:16px">
+    <h3>Perfil comparativo normalizado (% del máximo por indicador)</h3>
+    <div class="radar-wrap">
+      <svg id="radar-svg" viewBox="0 0 400 340" style="width:100%;max-width:420px;display:block;overflow:visible;"></svg>
+    </div>
+    <div class="legend-row" style="justify-content:center;margin-top:10px;">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--bo)"></span>BO</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--ssc)"></span>SSC</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--mbgi)"></span>MBGI</span>
+    </div>
+  </div>
+
+  <div class="cmp-section" style="margin-top:16px">
+    <h3>Resumen comparativo completo</h3>
+    <table>
+      <thead><tr><th>Indicador</th><th style="color:var(--bo)">BO</th><th style="color:var(--ssc)">SSC</th><th style="color:var(--mbgi)">MBGI</th></tr></thead>
+      <tbody>
+        <tr><td>Árboles/ha</td><td class="num">148</td><td class="num">38</td><td class="num">92</td></tr>
+        <tr><td>Área basal (m²/ha)</td><td class="num">11,38</td><td class="num">2,87</td><td class="num">5,72</td></tr>
+        <tr><td>Volumen (m³/ha)</td><td class="num">55,23</td><td class="num">27,92</td><td class="num">48,92</td></tr>
+        <tr><td>Biomasa (ton/ha)</td><td class="num">53,34</td><td class="num">25,01</td><td class="num">26,22</td></tr>
+        <tr><td>C almacenado (ton C/ha)</td><td class="num">26,67</td><td class="num">12,50</td><td class="num">13,11</td></tr>
+        <tr><td>Copa drone (%)</td><td class="num">—</td><td class="num">35,17</td><td class="num">72,50</td></tr>
+        <tr><td>N° spp. arbóreas</td><td class="num">14</td><td class="num">2</td><td class="num">3+</td></tr>
+        <tr><td>Regeneración natural</td>
+          <td style="color:var(--bo);font-weight:600">Activa</td>
+          <td style="color:var(--ssc);font-weight:600">Ausente</td>
+          <td style="color:var(--mbgi);font-weight:600">Variable</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.74rem;color:var(--muted);margin-top:12px;line-height:1.5;font-family:'IBM Plex Mono',monospace;">
+      Datos: Inventario forestal REDD+/IFN-FAO 2015 (BO) · Ibrahim &amp; Camargo 2001 (SSC, MBGI) · Drone DJI Mini 2 SE · Área: 5.608,7 ha — Mcal. Estigarribia, Boquerón, Paraguay.
+    </p>
+  </div>
+</div>
+
+
+
+<div class="footer">
+  Elaboración propia · Universidad del Pacífico, Paraguay · 2025<br>
+  Tesis: Análisis integrado de sistemas de producción agroganadera — Diagnóstico ecológico con tecnologías geoespaciales
+</div>
+
+<script>
+// ── COLOR TOKENS (read from CSS for dark mode compat) ──
+function tok(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+const C = { bo: '#2d6a2f', ssc: '#c4762a', mbgi: '#2a6a9e' };
+
+// ── TAB SWITCHER ──
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  // Re-trigger bar animations
+  setTimeout(() => animateBars(), 50);
+}
+
+// ── HORIZONTAL BAR BUILDER ──
+function buildHBars(containerId, labels, values, color, legendId, unit='') {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...values);
+  el.innerHTML = labels.map((lbl, i) => {
+    const pct = (values[i]/max*100).toFixed(1);
+    const numLabel = legendId ? (i+1) : '';
+    const barLabel = legendId ? `<span class="hbar-num">${i+1}</span>` : `<span class="hbar-label" style="font-size:.72rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;min-width:60px">${lbl}</span>`;
+    return `<div class="hbar-row">
+      ${barLabel}
+      <div class="hbar-track" data-tip="${lbl}: ${values[i]}${unit}">
+        <div class="hbar-fill" style="background:${color}" data-pct="${pct}" data-val="${values[i]}${unit}"></div>
+      </div>
+    </div>`;
+  }).join('');
+  if (legendId) {
+    const leg = document.getElementById(legendId);
+    if (leg) leg.innerHTML = labels.map((l,i)=>
+      `<div class="num-legend-item"><span class="num-badge" style="background:${color}">${i+1}</span><span>${l}</span></div>`
+    ).join('');
+  }
+}
+
+// ── GAUGE / DONUT ──
+function buildGauges(containerId, items, color) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const r = 44, cx = 54, cy = 54, stroke = 10;
+  const circ = 2 * Math.PI * r;
+  el.innerHTML = items.map(([label, val]) => {
+    const pct = val / 100;
+    const dash = (pct * circ).toFixed(2);
+    const gap  = (circ - dash).toFixed(2);
+    const valColor = color;
+    return `<div class="gauge-item">
+      <svg class="gauge-svg" width="108" height="108" viewBox="0 0 108 108">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="${stroke}"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
+          stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${circ/4}" stroke-linecap="round"
+          style="transition:stroke-dasharray .8s cubic-bezier(.4,0,.2,1)"/>
+        <text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
+          font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="${color}">${val}%</text>
+      </svg>
+      <div class="gauge-sub">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── CMP BARS ──
+function buildCmpBars(containerId, systems, max) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = systems.map(([name, val, color]) => {
+    const pct = val != null ? (val/max*100).toFixed(1) : 0;
+    const label = val != null ? val : '—';
+    return `<div class="cmp-row">
+      <span class="cmp-sys" style="color:${color}">${name}</span>
+      <div class="cmp-track" data-tip="${name}: ${label}">
+        <div class="cmp-fill" style="background:${color}" data-pct="${pct}">
+          <span>${label}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── RADAR ──
+function buildRadar() {
+  const svg = document.getElementById('radar-svg');
+  if (!svg) return;
+  const cx=200, cy=165, R=120;
+  const axes = ['Árb/ha','Área basal','Volumen','Biomasa','C almacenado','Cobertura copa'];
+  const n = axes.length;
+  // Normalised 0-1 (BO=ref for first 5; copa only SSC+MBGI)
+  const data = {
+    bo:   [148/148, 11.38/11.38, 55.23/55.23, 53.34/53.34, 26.67/26.67, 0],
+    ssc:  [38/148,  2.87/11.38,  27.92/55.23, 25.01/53.34, 12.50/26.67, 35.17/72.50],
+    mbgi: [92/148,  5.72/11.38,  48.92/55.23, 26.22/53.34, 13.11/26.67, 72.50/72.50],
+  };
+  function pts(vals) {
+    return vals.map((v, i) => {
+      const angle = (Math.PI*2*i/n) - Math.PI/2;
+      return [cx + R*v*Math.cos(angle), cy + R*v*Math.sin(angle)];
+    });
+  }
+  let html = '';
+  // Grid
+  [0.25,0.5,0.75,1].forEach(t => {
+    const gpts = Array.from({length:n},(_,i)=>{
+      const a=(Math.PI*2*i/n)-Math.PI/2;
+      return `${(cx+R*t*Math.cos(a)).toFixed(1)},${(cy+R*t*Math.sin(a)).toFixed(1)}`;
+    });
+    html+=`<polygon points="${gpts.join(' ')}" fill="none" stroke="var(--border)" stroke-width="1" opacity="0.6"/>`;
+    html+=`<text x="${cx+4}" y="${(cy-R*t-3).toFixed(1)}" font-size="8" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${Math.round(t*100)}%</text>`;
+  });
+  // Axes + labels
+  axes.forEach((label, i) => {
+    const angle = (Math.PI*2*i/n) - Math.PI/2;
+    const ex = cx + (R+14)*Math.cos(angle), ey = cy + (R+14)*Math.sin(angle);
+    const lx = cx + (R+28)*Math.cos(angle), ly = cy + (R+28)*Math.sin(angle);
+    const anchor = Math.cos(angle) > 0.1 ? 'start' : Math.cos(angle) < -0.1 ? 'end' : 'middle';
+    html += `<line x1="${cx}" y1="${cy}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--border)" stroke-width="1" opacity="0.5"/>`;
+    html += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle" font-size="9.5" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${label}</text>`;
+  });
+  // Series
+  [['bo',C.bo],['ssc',C.ssc],['mbgi',C.mbgi]].forEach(([key,color]) => {
+    const p = pts(data[key]);
+    const poly = p.map(([x,y])=>`${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+    html += `<polygon points="${poly}" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+    p.forEach(([x,y]) => html+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${color}" stroke="var(--surface)" stroke-width="1.5"/>`);
+  });
+  svg.innerHTML = html;
+}
+
+// ── ANIMATE all .hbar-fill and .cmp-fill with data-pct ──
+function animateBars() {
+  document.querySelectorAll('.hbar-fill[data-pct], .cmp-fill[data-pct]').forEach(el => {
+    el.style.width = el.dataset.pct + '%';
+  });
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  // BO
+  buildHBars('bo-abu-bars',
+    ['Salta triflora','Calycophyllum multiflorum','Aspidosperma q-b','Ceiba chodatii','Tabebuia nodosa','Ziziphus mistol','Schinopsis lorentzii','Schinus fasciculatus','Cereus forbesii','Otras (5 spp.)'],
+    [44,24,16,15,12,11,8,8,5,5], C.bo, 'bo-abu-leg', ' árb/ha');
+  buildHBars('bo-bio-bars',
+    ['Salta triflora','Calycophyllum multiflorum','Aspidosperma q-b','Ceiba chodatii','Tabebuia nodosa','Ziziphus mistol','Schinopsis lorentzii','Schinus fasciculatus','Cereus forbesii','Otras (5 spp.)'],
+    [3.42,3.25,7.08,27.20,1.45,2.70,2.12,2.75,2.88,0.49], C.bo, 'bo-bio-leg', ' t/ha');
+
+  // SSC
+  buildHBars('ssc-abu-bars',
+    ['Schinopsis lorentzii (Coronillo)','Aspidosperma quebracho-blanco'],
+    [25,13], C.ssc, null, ' árb/ha');
+  buildGauges('ssc-gauges', [['Terreno',28.18],['Drone',35.17]], C.ssc);
+
+  // MBGI
+  buildHBars('mbgi-abu-bars',
+    ['Schinopsis lorentzii (Coronillo)','Neltuma nigra (Algarrobo negro)','Aspidosperma quebracho-blanco','Árboles próximos (no id.)'],
+    [25,21,13,54], C.mbgi, 'mbgi-abu-leg', ' árb/ha');
+  buildGauges('mbgi-gauges', [['Terreno',40.80],['Drone',72.50]], C.mbgi);
+
+  // CMP
+  buildCmpBars('cmp-abu',    [['BO',148,C.bo],['SSC',38,C.ssc],['MBGI',92,C.mbgi]], 148);
+  buildCmpBars('cmp-bio',    [['BO',53.34,C.bo],['SSC',25.01,C.ssc],['MBGI',26.22,C.mbgi]], 53.34);
+  buildCmpBars('cmp-carbon', [['BO',26.67,C.bo],['SSC',12.50,C.ssc],['MBGI',13.11,C.mbgi]], 26.67);
+  buildCmpBars('cmp-ab',     [['BO',11.38,C.bo],['SSC',2.87,C.ssc],['MBGI',5.72,C.mbgi]], 11.38);
+  buildCmpBars('cmp-copa',   [['BO',null,C.bo],['SSC',35.17,C.ssc],['MBGI',72.50,C.mbgi]], 72.50);
+  buildRadar();
+
+  setTimeout(animateBars, 120);
+});
+</script>
+
+</body></html>
