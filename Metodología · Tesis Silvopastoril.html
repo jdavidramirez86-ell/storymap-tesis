@@ -1,0 +1,621 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Metodología · Tesis Silvopastoril</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap">
+
+<style>
+/* ══ TOKENS · Dark-only · Chaco verde ══ */
+:root {
+  --bg:      #0b1610;
+  --bg2:     #111f14;
+  --card:    #162019;
+  --card2:   #1c2b1f;
+  --fg:      #d6edda;
+  --fg2:     #7aaa82;
+  --fg3:     #3a6040;
+  --border:  #243828;
+  --g1:      #52B788;   /* verde principal */
+  --g2:      #2D6A4F;   /* verde oscuro */
+  --g3:      #74C69D;   /* verde claro */
+  --g-l:     #1a3328;   /* verde fondo suave */
+  --amber:   #e9a03a;   /* acento dorado para SSC */
+  --blue:    #7ba7d4;   /* azul para MBGI */
+  --shadow:  0 2px 20px rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--fg);}
+body{
+  font-family:'Inter',sans-serif;
+  padding-block: 24px;
+  padding-left:  max(20px, env(safe-area-inset-left,0px));
+  padding-right: max(20px, env(safe-area-inset-right,0px));
+}
+
+/* ── ENCABEZADO ── */
+.header{margin-bottom:28px;}
+.header-eyebrow{
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--g1);margin-bottom:6px;
+}
+.header-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(1rem,2.5vw,1.35rem);font-weight:700;
+  color:var(--fg);line-height:1.25;margin-bottom:4px;
+}
+.header-sub{font-size:.72rem;color:var(--fg2);}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}@media(max-width:500px){.grid{grid-template-columns:1fr;}}
+
+/* ── TARJETA BASE ── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:18px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(82,183,136,.04) 0%,transparent 60%);
+  pointer-events:none;
+}
+.card-eyebrow{
+  font-size:.58rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fg3);margin-bottom:3px;
+}
+.card-title{font-size:.85rem;font-weight:800;color:var(--fg);margin-bottom:3px;}
+.card-sub{font-size:.68rem;color:var(--fg2);margin-bottom:14px;line-height:1.45;}
+
+/* Progress ring */
+.pring{position:absolute;top:14px;right:14px;width:26px;height:26px;}
+.pring circle{fill:none;stroke-width:3;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:50% 50%;}
+.pr-bg{stroke:var(--border);}
+.pr-fg{stroke:var(--g1);transition:stroke-dashoffset .1s linear;}
+
+/* ══════════════════════════════════
+   CARD 1 · FLUJO SIG (5 pasos)
+══════════════════════════════════ */
+.seq{display:flex;align-items:center;gap:0;overflow:hidden;}
+.seq-step{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  flex:1;min-width:0;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s,transform .4s;
+}
+.seq-step.show{opacity:1;transform:none;}
+.seq-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;background:var(--g-l);
+  border:1px solid var(--border);
+}
+.seq-lbl{font-size:.52rem;font-weight:700;color:var(--fg2);text-align:center;line-height:1.3;}
+.seq-arr{font-size:.8rem;color:var(--fg3);flex-shrink:0;padding:0 1px;
+  opacity:0;transition:opacity .3s;}
+.seq-arr.show{opacity:1;}
+
+/* ══════════════════════════════════
+   CARD 2 · VARIABLES MEDIDAS
+══════════════════════════════════ */
+.meas-chain{display:flex;flex-direction:column;gap:8px;}
+.mc-row{display:flex;align-items:center;gap:10px;
+  opacity:0;transform:translateX(-8px);transition:opacity .4s,transform .4s;}
+.mc-row.show{opacity:1;transform:none;}
+.mc-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0;}
+.mc-label{font-size:.68rem;font-weight:800;flex:1;color:var(--fg);}
+.mc-bar-wrap{width:72px;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;flex-shrink:0;}
+.mc-bar{height:100%;border-radius:3px;width:0;transition:width 1.4s cubic-bezier(.22,1,.36,1);}
+.mc-val{font-size:.64rem;font-weight:900;min-width:38px;text-align:right;}
+
+/* ══════════════════════════════════
+   CARD 5 · MÉTODOS FLIP
+══════════════════════════════════ */
+.flip-grid{display:flex;gap:8px;}
+.flip-card{
+  flex:1;border-radius:10px;padding:10px 8px;text-align:center;
+  background:var(--bg2);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.flip-icon{font-size:1.4rem;margin-bottom:6px;display:block;}
+.flip-sys{font-size:.72rem;font-weight:900;margin-bottom:4px;}
+.flip-method{
+  font-size:.56rem;color:var(--fg2);line-height:1.4;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s,transform .5s;
+}
+.flip-method.show{opacity:1;transform:none;}
+.flip-year{
+  display:inline-block;margin-top:5px;
+  font-size:.52rem;font-weight:700;letter-spacing:.06em;
+  padding:2px 6px;border-radius:4px;
+  opacity:0;transition:opacity .4s .3s;
+}
+.flip-year.show{opacity:1;}
+.flip-bar{
+  position:absolute;bottom:0;left:0;width:0;height:3px;
+  border-radius:0 2px 0 0;transition:width 7s linear;
+}
+.flip-bar.grow{width:100%;}
+
+/* ══════════════════════════════════
+   CARD 3 · ÁRBOL → CARBONO
+══════════════════════════════════ */
+.tree-anim{display:flex;align-items:center;gap:10px;height:100%;overflow:hidden;}
+.tree-svg-wrap{width:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.tree-lines{flex:1;display:flex;flex-direction:column;gap:5px;justify-content:center;}
+.tl-row2{display:flex;align-items:center;gap:6px;
+  opacity:0;transform:translateX(6px);transition:opacity .35s,transform .35s;}
+.tl-row2.show{opacity:1;transform:none;}
+.tl-icon2{font-size:.85rem;flex-shrink:0;}
+.tl-text2{font-size:.6rem;font-weight:800;line-height:1.2;}
+.tl-sub3{font-size:.5rem;color:var(--fg2);line-height:1.2;}
+
+/* ══════════════════════════════════
+   CARD 4 · PROTOCOLO DE CAMPO
+══════════════════════════════════ */
+.phases{display:flex;flex-direction:column;gap:0;justify-content:center;padding-top:4px;}
+.ph{display:flex;align-items:flex-start;gap:8px;padding-bottom:12px;
+  position:relative;opacity:0;transform:translateY(5px);transition:opacity .4s,transform .4s;}
+.ph:last-child{padding-bottom:0;}
+.ph.show{opacity:1;transform:none;}
+.ph:not(:last-child)::after{content:'';position:absolute;left:13px;top:28px;
+  width:1px;bottom:0;background:var(--border);}
+.ph-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:.8rem;flex-shrink:0;}
+.ph-title{font-size:.66rem;font-weight:900;line-height:1.2;margin-bottom:2px;}
+.ph-sub{font-size:.54rem;color:var(--fg2);line-height:1.35;}
+
+/* ══════════════════════════════════
+   CARD 5 · PING SISTEMAS
+══════════════════════════════════ */
+.ping-row{display:flex;justify-content:space-around;align-items:center;padding:6px 0;}
+.ping-wrap{position:relative;display:flex;align-items:center;justify-content:center;
+  width:64px;height:64px;flex-direction:column;gap:6px;}
+.ping-dot{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:800;color:var(--bg);
+  position:relative;z-index:2;
+}
+.ping-ring{
+  position:absolute;width:32px;height:32px;border-radius:50%;
+  opacity:0;transform:scale(1);top:50%;left:50%;margin-top:-16px;margin-left:-16px;
+}
+.ping-wrap.active .ping-ring{animation:pingAnim 1.5s ease-out infinite;}
+@keyframes pingAnim{
+  0%{transform:scale(.6);opacity:.7;}
+  100%{transform:scale(2.2);opacity:0;}
+}
+.ping-lbl{font-size:.58rem;font-weight:700;text-align:center;line-height:1.3;}
+
+/* ══════════════════════════════════
+   CARD 6 · DRONE TIMELINE
+══════════════════════════════════ */
+.sky{
+  height:34px;border-radius:8px;
+  background:linear-gradient(90deg,#0b1a2e,#122240,#0b1a2e);
+  position:relative;overflow:hidden;margin-bottom:10px;
+}
+.drone{
+  position:absolute;top:50%;transform:translateY(-50%);
+  font-size:1.2rem;left:-12%;
+  transition:left 5.8s cubic-bezier(.4,0,.2,1);
+  filter:drop-shadow(0 2px 6px rgba(82,183,136,.4));
+}
+.drone.fly{left:108%;}
+.tl{display:flex;gap:0;position:relative;}
+.tl::before{
+  content:'';position:absolute;top:13px;left:14px;right:14px;
+  height:2px;background:var(--border);z-index:0;
+}
+.tl-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+  position:relative;z-index:1;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s,transform .4s;
+}
+.tl-item.show{opacity:1;transform:none;}
+.tl-dot{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:900;color:var(--bg);
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.tl-name{font-size:.62rem;font-weight:700;text-align:center;color:var(--fg);}
+.tl-desc{font-size:.55rem;color:var(--fg2);text-align:center;line-height:1.3;}
+
+/* ── CONTROLES ── */
+.controls{
+  margin-top:20px;display:flex;align-items:center;
+  justify-content:center;gap:10px;flex-wrap:wrap;
+}
+.btn{
+  padding:8px 20px;border-radius:20px;
+  font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;
+  transition:all .2s;border:1.5px solid var(--g1);
+}
+.btn-primary{background:var(--g1);color:var(--bg);}
+.btn-primary:hover{opacity:.85;}
+.btn-ghost{background:transparent;color:var(--g1);}
+.btn-ghost:hover{background:var(--g-l);}
+.cycle-info{font-size:.65rem;color:var(--fg3);text-align:center;margin-top:10px;}
+</style>
+
+<div class="header">
+  <div class="header-eyebrow">Tesis de Maestría · Universidad del Pacífico</div>
+  <div class="header-title">Análisis Integral en Sistemas de Producción Agroganadera Mediante Diagnóstico Ecológico</div>
+  <div class="header-sub">Tecnologías Geoespaciales en el Distrito de Mariscal Estigarribia, Departamento de Boquerón.</div>
+</div>
+
+<div class="grid" id="mainGrid">
+
+  <!-- CARD 1 · FLUJO SIG -->
+  <div class="card" id="card1">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring1" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Flujo SIG</div>
+    <div class="card-title">Procesamiento Geoespacial</div>
+    <div class="card-sub">Elaboración de mapas — Fase A · Gabinete</div>
+    <div class="seq" id="seqFlow">
+      <div class="seq-step" id="s0"><div class="seq-icon">📡</div><div class="seq-lbl">Imágenes<br>Satelitales</div></div>
+      <div class="seq-arr" id="sa0">›</div>
+      <div class="seq-step" id="s1"><div class="seq-icon">🖥️</div><div class="seq-lbl">Digitalización<br>SIG</div></div>
+      <div class="seq-arr" id="sa1">›</div>
+      <div class="seq-step" id="s2"><div class="seq-icon">📐</div><div class="seq-lbl">Análisis<br>Espacial</div></div>
+      <div class="seq-arr" id="sa2">›</div>
+      <div class="seq-step" id="s3"><div class="seq-icon">📊</div><div class="seq-lbl">Cuantifi-<br>cación</div></div>
+      <div class="seq-arr" id="sa3">›</div>
+      <div class="seq-step" id="s4"><div class="seq-icon">🗺️</div><div class="seq-lbl">Mapa<br>Final</div></div>
+    </div>
+  </div>
+
+  <!-- CARD 2 · VARIABLES MEDIDAS (B4) -->
+  <div class="card" id="card2">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring2" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Variables de Campo</div>
+    <div class="card-title">Variables Medidas</div>
+    <div class="card-sub">Parámetros dasométricos del inventario forestal</div>
+    <div class="meas-chain">
+      <div class="mc-row" id="mr1">
+        <div class="mc-icon">📏</div>
+        <div class="mc-label">DAP</div>
+        <div class="mc-bar-wrap"><div class="mc-bar" id="mb1" style="background:var(--g1)"></div></div>
+        <div class="mc-val" style="color:var(--g1)">≥10 cm</div>
+      </div>
+      <div class="mc-row" id="mr2">
+        <div class="mc-icon">📐</div>
+        <div class="mc-label">Altura total</div>
+        <div class="mc-bar-wrap"><div class="mc-bar" id="mb2" style="background:var(--blue)"></div></div>
+        <div class="mc-val" style="color:var(--blue)">m</div>
+      </div>
+      <div class="mc-row" id="mr3">
+        <div class="mc-icon">🌿</div>
+        <div class="mc-label">Biomasa aérea</div>
+        <div class="mc-bar-wrap"><div class="mc-bar" id="mb3" style="background:var(--amber)"></div></div>
+        <div class="mc-val" style="color:var(--amber)">tC·ha⁻¹</div>
+      </div>
+      <div class="mc-row" id="mr4">
+        <div class="mc-icon">🔢</div>
+        <div class="mc-label">Densidad</div>
+        <div class="mc-bar-wrap"><div class="mc-bar" id="mb4" style="background:var(--g3)"></div></div>
+        <div class="mc-val" style="color:var(--g3)">ind·ha⁻¹</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 · ÁRBOL → ECUACIÓN → CARBONO (C4) -->
+  <div class="card" id="card3">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring3" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Cadena de Cálculo</div>
+    <div class="card-title">Árbol → Ecuación → Carbono</div>
+    <div class="card-sub">Individuo medido → biomasa → stock de carbono</div>
+    <div class="tree-anim">
+      <div class="tree-svg-wrap">
+        <svg viewBox="0 0 52 70" width="52" height="70">
+          <rect id="trunk" x="22" y="70" width="8" height="0" fill="#5a3e28" rx="2"
+            style="transition:height 1s .2s,y 1s .2s"/>
+          <circle id="crown" cx="26" cy="22" r="0" fill="var(--g1)" opacity=".85"
+            style="transition:r .8s .9s cubic-bezier(.34,1.56,.64,1)"/>
+          <circle id="crown2" cx="18" cy="33" r="0" fill="var(--g2)" opacity=".9"
+            style="transition:r .6s 1.2s cubic-bezier(.34,1.56,.64,1)"/>
+          <circle id="crown3" cx="34" cy="33" r="0" fill="var(--g2)" opacity=".9"
+            style="transition:r .6s 1.4s cubic-bezier(.34,1.56,.64,1)"/>
+          <line id="dapline" x1="14" y1="54" x2="38" y2="54" stroke="var(--blue)"
+            stroke-width="1.5" stroke-dasharray="24" stroke-dashoffset="24"
+            style="transition:stroke-dashoffset .6s 2s"/>
+          <text id="daptxt" x="26" y="50" fill="var(--blue)" font-size="5.5"
+            text-anchor="middle" opacity="0" style="transition:opacity .4s 2.4s">DAP</text>
+        </svg>
+      </div>
+      <div class="tree-lines">
+        <div class="tl-row2" id="tlr1">
+          <span class="tl-icon2">📏</span>
+          <div><div class="tl-text2">DAP medido</div><div class="tl-sub3">cinta diamétrica</div></div>
+        </div>
+        <div class="tl-row2" id="tlr2">
+          <span class="tl-icon2">🧮</span>
+          <div><div class="tl-text2">Ec. alométrica</div><div class="tl-sub3">Ibrahim &amp; FAO 2015</div></div>
+        </div>
+        <div class="tl-row2" id="tlr3">
+          <span class="tl-icon2">🌿</span>
+          <div><div class="tl-text2" style="color:var(--g1)">tC · ha⁻¹</div><div class="tl-sub3">stock carbono</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 · PROTOCOLO DE CAMPO (D4) -->
+  <div class="card" id="card4">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring4" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Inventario Forestal</div>
+    <div class="card-title">Protocolo de Campo</div>
+    <div class="card-sub">Secuencia del inventario en parcelas 20×20 m</div>
+    <div class="phases">
+      <div class="ph" id="ph1">
+        <div class="ph-dot" style="background:var(--g1)">📍</div>
+        <div>
+          <div class="ph-title">Delimitación</div>
+          <div class="ph-sub">20×20 m · brújula + cinta</div>
+        </div>
+      </div>
+      <div class="ph" id="ph2">
+        <div class="ph-dot" style="background:var(--blue)">📏</div>
+        <div>
+          <div class="ph-title">Medición DAP + altura</div>
+          <div class="ph-sub">Cinta diamétrica · ≥10 cm</div>
+        </div>
+      </div>
+      <div class="ph" id="ph3">
+        <div class="ph-dot" style="background:var(--amber)">🛰️</div>
+        <div>
+          <div class="ph-title">Georreferenciación</div>
+          <div class="ph-sub">GPS Garmin · WGS84</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 · MÉTODOS POR SISTEMA -->
+  <div class="card" id="card5">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring5" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Marco Metodológico</div>
+    <div class="card-title">Método por Sistema</div>
+    <div class="card-sub">Protocolo aplicado según tipo de sistema productivo</div>
+    <div class="flip-grid">
+      <div class="flip-card">
+        <div class="flip-bar" id="fb1" style="background:var(--g1)"></div>
+        <span class="flip-icon">🌳</span>
+        <div class="flip-sys" style="color:var(--g1)">BO</div>
+        <div class="flip-method" id="fm1">REDD+<br>FAO 2015<br>Conglomerado<br>3 parcelas</div>
+        <div class="flip-year" id="fy1" style="background:rgba(82,183,136,.15);color:var(--g1)">FAO 2015</div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-bar" id="fb2" style="background:var(--blue)"></div>
+        <span class="flip-icon">🌿</span>
+        <div class="flip-sys" style="color:var(--blue)">MBGI</div>
+        <div class="flip-method" id="fm2">Ibrahim &<br>Camargo<br>10 parcelas<br>20×20 m</div>
+        <div class="flip-year" id="fy2" style="background:rgba(123,167,212,.15);color:var(--blue)">2001</div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-bar" id="fb3" style="background:var(--amber)"></div>
+        <span class="flip-icon">🐄</span>
+        <div class="flip-sys" style="color:var(--amber)">SSC</div>
+        <div class="flip-method" id="fm3">Ibrahim &<br>Camargo<br>10 parcelas<br>20×20 m</div>
+        <div class="flip-year" id="fy3" style="background:rgba(233,160,58,.15);color:var(--amber)">2001</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 · DRONE TIMELINE -->
+  <div class="card" id="card6">
+    <svg class="pring" viewBox="0 0 26 26">
+      <circle class="pr-bg" cx="13" cy="13" r="10"/>
+      <circle class="pr-fg" id="ring6" cx="13" cy="13" r="10" stroke-dasharray="62.8" stroke-dashoffset="62.8"/>
+    </svg>
+    <div class="card-eyebrow">Tipo 6 · Drone + Timeline</div>
+    <div class="card-title">Fases Metodológicas</div>
+    <div class="card-sub">DJI Mini 2 SE recorre las etapas A → B → C</div>
+    <div>
+      <div class="sky">
+        <div class="drone" id="droneEl">🛸</div>
+      </div>
+      <div class="tl">
+        <div class="tl-item" id="t0">
+          <div class="tl-dot" style="background:var(--blue)">A</div>
+          <div class="tl-name">Gabinete</div>
+          <div class="tl-desc">SIG &<br>Satélite</div>
+        </div>
+        <div class="tl-item" id="t1">
+          <div class="tl-dot" style="background:var(--g1)">B</div>
+          <div class="tl-name">Campo</div>
+          <div class="tl-desc">Parcelas<br>& DAP</div>
+        </div>
+        <div class="tl-item" id="t2">
+          <div class="tl-dot" style="background:var(--amber)">C</div>
+          <div class="tl-name">Drone</div>
+          <div class="tl-desc">Copas<br>& Biomasa</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<script>
+const CYCLE = 8000;
+let timers = [];
+
+function T(fn, ms) {
+  const id = setTimeout(fn, ms);
+  timers.push(id);
+  return id;
+}
+function clearTimers() {
+  timers.forEach(clearTimeout);
+  timers = [];
+}
+
+/* ── RING ── */
+function animRing(id, dur) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.transition = 'none';
+  el.style.strokeDashoffset = '62.8';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.transition = `stroke-dashoffset ${dur}ms linear`;
+    el.style.strokeDashoffset = '0';
+  }));
+}
+
+/* ── CARD 1 · SEQ ── */
+function launchSeq() {
+  for (let i = 0; i < 5; i++) {
+    document.getElementById('s' + i)?.classList.remove('show');
+    document.getElementById('sa' + i)?.classList.remove('show');
+  }
+  animRing('ring1', CYCLE - 200);
+  for (let i = 0; i < 5; i++) {
+    T(() => {
+      document.getElementById('s' + i)?.classList.add('show');
+      if (i < 4) document.getElementById('sa' + i)?.classList.add('show');
+    }, 300 + i * 1100);
+  }
+}
+
+/* ── CARD 2 · VARIABLES MEDIDAS ── */
+function launchVars() {
+  ['mr1','mr2','mr3','mr4'].forEach(id => document.getElementById(id)?.classList.remove('show'));
+  ['mb1','mb2','mb3','mb4'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.width = '0';
+  });
+  animRing('ring2', CYCLE - 200);
+  const widths = [85, 70, 90, 60];
+  ['mr1','mr2','mr3','mr4'].forEach((id, i) => {
+    T(() => {
+      document.getElementById(id)?.classList.add('show');
+      T(() => {
+        const b = document.getElementById('mb' + (i + 1));
+        if (b) b.style.width = widths[i] + '%';
+      }, 250);
+    }, 200 + i * 380);
+  });
+}
+
+/* ── CARD 3 · ÁRBOL → CARBONO ── */
+function launchTree3() {
+  const trunk = document.getElementById('trunk');
+  if (trunk) { trunk.style.transition = 'none'; trunk.setAttribute('height','0'); trunk.setAttribute('y','82'); }
+  ['crown','crown2','crown3'].forEach(id => {
+    const el = document.getElementById(id); if (el) { el.style.transition = 'none'; el.setAttribute('r','0'); }
+  });
+  const dl = document.getElementById('dapline');
+  if (dl) { dl.style.transition = 'none'; dl.setAttribute('stroke-dashoffset','24'); }
+  const dt = document.getElementById('daptxt');
+  if (dt) { dt.style.transition = 'none'; dt.style.opacity = '0'; }
+  ['tlr1','tlr2','tlr3'].forEach(id => document.getElementById(id)?.classList.remove('show'));
+  animRing('ring3', CYCLE - 200);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (trunk) trunk.style.transition = 'height 1s .2s, y 1s .2s';
+    ['crown','crown2','crown3'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.style.transition = '';
+    });
+    if (dl) dl.style.transition = 'stroke-dashoffset .6s 2s';
+    if (dt) dt.style.transition = 'opacity .4s 2.4s';
+    T(() => { if (trunk) { trunk.setAttribute('height','20'); trunk.setAttribute('y','50'); } }, 200);
+    T(() => document.getElementById('crown')?.setAttribute('r','14'), 900);
+    T(() => document.getElementById('crown2')?.setAttribute('r','9'), 1200);
+    T(() => document.getElementById('crown3')?.setAttribute('r','9'), 1400);
+    T(() => document.getElementById('dapline')?.setAttribute('stroke-dashoffset','0'), 2000);
+    T(() => { const t = document.getElementById('daptxt'); if (t) t.style.opacity = '1'; }, 2400);
+    T(() => document.getElementById('tlr1')?.classList.add('show'), 1800);
+    T(() => document.getElementById('tlr2')?.classList.add('show'), 2500);
+    T(() => document.getElementById('tlr3')?.classList.add('show'), 3200);
+  }));
+}
+
+/* ── CARD 4 · PROTOCOLO DE CAMPO ── */
+function launchProtocol() {
+  ['ph1','ph2','ph3'].forEach(id => document.getElementById(id)?.classList.remove('show'));
+  animRing('ring4', CYCLE - 200);
+  T(() => document.getElementById('ph1')?.classList.add('show'), 300);
+  T(() => document.getElementById('ph2')?.classList.add('show'), 950);
+  T(() => document.getElementById('ph3')?.classList.add('show'), 1600);
+}
+
+/* ── CARD 5 · MÉTODOS FLIP ── */
+function launchMethods() {
+  ['fm1','fm2','fm3','fy1','fy2','fy3'].forEach(id => document.getElementById(id)?.classList.remove('show'));
+  ['fb1','fb2','fb3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.transition = 'none'; el.style.width = '0'; }
+  });
+  animRing('ring5', CYCLE - 200);
+  T(() => {
+    ['fb1','fb2','fb3'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.transition = 'width 7s linear';
+    });
+    document.getElementById('fb1')?.style && (document.getElementById('fb1').style.width = '100%');
+    document.getElementById('fb2')?.style && (document.getElementById('fb2').style.width = '100%');
+    document.getElementById('fb3')?.style && (document.getElementById('fb3').style.width = '100%');
+  }, 300);
+  T(() => document.getElementById('fm1')?.classList.add('show'), 500);
+  T(() => document.getElementById('fy1')?.classList.add('show'), 900);
+  T(() => document.getElementById('fm2')?.classList.add('show'), 1400);
+  T(() => document.getElementById('fy2')?.classList.add('show'), 1800);
+  T(() => document.getElementById('fm3')?.classList.add('show'), 2300);
+  T(() => document.getElementById('fy3')?.classList.add('show'), 2700);
+}
+
+/* ── CARD 6 · DRONE ── */
+function launchTimeline() {
+  const drone = document.getElementById('droneEl');
+  if (drone) { drone.style.transition = 'none'; drone.style.left = '-12%'; }
+  ['t0','t1','t2'].forEach(id => document.getElementById(id)?.classList.remove('show'));
+  animRing('ring6', CYCLE - 200);
+  T(() => {
+    const d = document.getElementById('droneEl');
+    if (d) { d.style.transition = 'left 5.8s cubic-bezier(.4,0,.2,1)'; d.style.left = '108%'; }
+    T(() => document.getElementById('t0')?.classList.add('show'), 500);
+    T(() => document.getElementById('t1')?.classList.add('show'), 2200);
+    T(() => document.getElementById('t2')?.classList.add('show'), 3900);
+  }, 300);
+}
+
+function launchAll() {
+  launchSeq();
+  launchVars();
+  launchTree3();
+  launchProtocol();
+  launchMethods();
+  launchTimeline();
+}
+
+function restartAll() {
+  clearTimers();
+  launchAll();
+  T(() => restartAll(), CYCLE + 600);
+}
+
+restartAll();
+</script>
+
+</body></html>
